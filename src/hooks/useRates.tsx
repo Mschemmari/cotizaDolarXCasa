@@ -1,25 +1,39 @@
 import {useState, useEffect} from 'react';
+import {getDatabase, ref, onValue} from 'firebase/database';
+import {firebaseConfig} from '../utils';
+// import {Rate} from '../types';
+import {initializeApp} from 'firebase/app';
+initializeApp(firebaseConfig);
+
+const db = getDatabase();
 
 export const useRates = () => {
   const [rates, setRates] = useState<any>(null);
+  const [modified, setModified] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const fetchRates = async () => {
-    try {
-      const response = await fetch('https://dolarapi.com/v1/dolares');
-      const data = await response.json();
-      console.log(data);
 
-      setRates(data);
-      setLoading(false);
-    } catch (fetchError) {
-      setError('Failed to fetch rates');
-      setLoading(false);
-    }
-  };
   useEffect(() => {
-    fetchRates();
-  }, []);
+    const cotizaciones = ref(db, 'currencies/');
 
-  return {rates, loading, error};
+    onValue(cotizaciones, snapshot => {
+      const data = snapshot.val();
+      console.log(data.modified);
+      setModified(
+        data.modified.map((item: any) => ({
+          ...item.newValue,
+          actualizacion: new Date().toLocaleTimeString(),
+        })),
+      );
+      setRates(
+        data.rates.map((item: any) => ({
+          ...item,
+          actualizacion: new Date().toLocaleTimeString(),
+        })),
+      );
+      setLoading(false);
+    });
+  }, []);
+  console.log(modified);
+
+  return {rates, loading, modified}; //error
 };

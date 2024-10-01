@@ -1,11 +1,20 @@
 import React from 'react';
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import ItemComponent from './src/components/itemComponent';
-import {formatDate} from './src/utils';
+import {formatDate} from './src/utils'; //firebaseConfig
 import {useRates} from './src/hooks/useRates';
+// import {initializeApp} from 'firebase/app';
+
+// const starCountRef = ref(db, 'posts/' + postId + '/starCount');
+// onValue(starCountRef, snapshot => {
+//   const data = snapshot.val();
+//   updateStarCount(postElement, data);
+// });
 
 const App = () => {
-  const {rates} = useRates();
+  const {rates, modified} = useRates();
+  console.log(rates);
+
   const today = new Date();
   const formattedDate = formatDate(today.toISOString());
   return (
@@ -13,7 +22,10 @@ const App = () => {
       <View style={styles.scrollViewStyle}>
         <Text style={styles.headerTitle}>Cotización del Dólar</Text>
         <Text style={styles.headerDate}>{formattedDate}</Text>
-        <ItemComponent rates={rates} />
+        <Text style={styles.headerDate}>Fuente: Diario El Cronista</Text>
+        {rates && <ItemComponent rates={rates} />}
+        <Text style={styles.headerTitle}>Ultima actualizacion:</Text>
+        {modified && <ItemComponent rates={modified} />}
       </View>
     </SafeAreaView>
   );

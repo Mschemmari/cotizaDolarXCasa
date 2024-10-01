@@ -1,33 +1,31 @@
 import React from 'react';
 import {VirtualizedList, View, Text, StyleSheet} from 'react-native';
-import {formatDate} from '../utils';
-
-export type Rate = {
-  moneda: string;
-  casa: string;
-  nombre: string;
-  compra: number;
-  venta: number;
-  fechaActualizacion: string;
-};
+// import {formatDate} from '../utils';
+import {Rate} from '../types';
 
 const Item = (rate: Rate, i: number) => {
+  console.log(rate);
+
   return (
     <View style={styles.itemContainer} key={i}>
       <View style={styles.item}>
         <Text numberOfLines={1} style={styles.exchange}>
-          {rate.nombre}
+          {rate.name}
         </Text>
         <View>
           <Text style={styles.operation}>Compra</Text>
-          <Text style={styles.exchangeRate}>${rate.compra}</Text>
+          <Text style={styles.exchangeRate}>$ {rate.buyValue}</Text>
         </View>
         <View>
           <Text style={styles.operation}>Venta</Text>
-          <Text style={styles.exchangeRate}>${rate.venta}</Text>
+          <Text style={styles.exchangeRate}>$ {rate.sellValue}</Text>
+          {/* <Text style={styles.exchangeRate}>%{rate.variacion}</Text> */}
         </View>
       </View>
-      <Text style={styles.updated}>{formatDate(rate.fechaActualizacion)}</Text>
+      <View style={styles.bottom}>
+        <Text style={styles.updated}>Actualizado: {rate.actualizacion}</Text>
+        <Text style={styles.variacion}>Variacion: {rate.variation}%</Text>
+      </View>
     </View>
   );
 };
@@ -67,6 +65,11 @@ const styles = StyleSheet.create({
     color: 'gray',
     textAlign: 'left',
   },
+  variacion: {
+    fontSize: 11,
+    color: 'gray',
+    textAlign: 'right',
+  },
   exchange: {
     fontSize: 20,
     color: 'white',
@@ -81,6 +84,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     textAlign: 'center',
+  },
+  bottom: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingTop: 5,
   },
 });
 
