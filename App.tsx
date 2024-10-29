@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import ItemComponent from './src/components/itemComponent';
 import {formatDate} from './src/utils'; //firebaseConfig
 import {useRates} from './src/hooks/useRates';
+import {LogLevel, OneSignal} from 'react-native-onesignal';
+
 // import {initializeApp} from 'firebase/app';
 
 // const starCountRef = ref(db, 'posts/' + postId + '/starCount');
@@ -12,6 +14,20 @@ import {useRates} from './src/hooks/useRates';
 // });
 
 const App = () => {
+  // Remove this method to stop OneSignal Debugging
+  OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+
+  // OneSignal Initialization
+  OneSignal.initialize('ONESIGNAL_APP_ID');
+
+  // requestPermission will show the native iOS or Android notification permission prompt.
+  // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.Notifications.requestPermission(true);
+
+  // Method for listening for notification clicks
+  OneSignal.Notifications.addEventListener('click', event => {
+    console.log('OneSignal: notification clicked:', event);
+  });
   const {rates, modified} = useRates();
   console.log(rates);
 

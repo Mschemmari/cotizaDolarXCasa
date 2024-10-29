@@ -27,6 +27,8 @@ target 'cotizaDolarXCasa' do
     inherit! :complete
     # Pods for testing
   end
+  
+
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
@@ -37,4 +39,7 @@ target 'cotizaDolarXCasa' do
       # :ccache_enabled => true
     )
   end
+end
+target 'OneSignalNotificationServiceExtension' do
+  pod 'OneSignalXCFramework', '>= 5.0.0', '< 6.0'
 end
